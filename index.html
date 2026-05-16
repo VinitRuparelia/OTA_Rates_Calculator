@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <title>OTA Commission Calculator</title>
 
@@ -201,7 +201,7 @@
         <input
             type="number"
             id="base-rate"
-            value="2000"
+            value="5000"
             min="100"
             step="100"
         />
@@ -240,9 +240,8 @@
             </div>
 
             <select id="airbnb-fee-type" class="fee-select">
-                <option value="split">Split Fee</option>
                 <option value="single">Single Fee</option>
-
+                <option value="split">Split Fee</option>
             </select>
 
         </div>
@@ -265,12 +264,13 @@
                     <div>
                         GST:
                         <span id="airbnb-guest-gst">₹0</span>
+                        (<span id="airbnb-gst-percent">5%</span>)
                     </div>
 
                     <div>
                         Guest fee:
                         <span id="airbnb-guest-fee">₹0</span>
-                        (<span id="airbnb-guest-fee-percent">15.5%</span>)
+                        (<span id="airbnb-guest-fee-percent">0%</span>)
                     </div>
 
                 </div>
@@ -294,6 +294,7 @@
                     <div>
                         TDS:
                         <span id="airbnb-tds">₹0</span>
+                        (<span id="airbnb-tds-percent">1%</span>)
                     </div>
 
                 </div>
@@ -341,6 +342,7 @@
                     <div>
                         GST:
                         <span id="booking-guest-gst">₹0</span>
+                        (<span id="booking-gst-percent">5%</span>)
                     </div>
 
                     <div class="muted">(No guest fee)</div>
@@ -366,6 +368,7 @@
                     <div>
                         TDS:
                         <span id="booking-tds">₹0</span>
+                        (<span id="booking-tds-percent">1%</span>)
                     </div>
 
                 </div>
@@ -413,6 +416,7 @@
                     <div>
                         GST:
                         <span id="agoda-guest-gst">₹0</span>
+                        (<span id="agoda-gst-percent">5%</span>)
                     </div>
 
                     <div class="muted">(No guest fee)</div>
@@ -438,6 +442,7 @@
                     <div>
                         TDS:
                         <span id="agoda-tds">₹0</span>
+                        (<span id="agoda-tds-percent">1%</span>)
                     </div>
 
                 </div>
@@ -448,7 +453,7 @@
 
     </div>
 
-    <!-- MAKEMYTRIP -->
+    <!-- MMT -->
 
     <div class="platform-section">
 
@@ -457,12 +462,12 @@
             <div class="platform-brand">
 
                 <img
-   		  src="https://www.google.com/s2/favicons?domain=in.goibibo.com&sz=64"
-  		  class="platform-logo"
-		/>
+                    src="https://in.goibibo.com/favicon.ico"
+                    class="platform-logo"
+                />
 
                 <div class="platform-title">
-                    Go-MMT (Connect)
+                    Go-MMT (MakeMyTrip)
                 </div>
 
             </div>
@@ -487,6 +492,7 @@
                     <div>
                         GST:
                         <span id="mmt-guest-gst">₹0</span>
+                        (<span id="mmt-gst-percent">5%</span>)
                     </div>
 
                     <div class="muted">(No guest fee)</div>
@@ -512,6 +518,7 @@
                     <div>
                         TDS:
                         <span id="mmt-tds">₹0</span>
+                        (<span id="mmt-tds-percent">1%</span>)
                     </div>
 
                 </div>
@@ -584,75 +591,80 @@
         const gst =
             totalBase * gstRate;
 
-     // AIRBNB
+        const gstPercent =
+            (gstRate * 100).toFixed(0) + '%';
 
-const feeType =
-    airbnbFeeType.value;
+        const tdsPercent = '1%';
 
-let airbnbGuestFeeRate = 0;
-let airbnbHostFeeRate = 0;
+        // AIRBNB
 
-if(feeType === 'single'){
+        const feeType =
+            airbnbFeeType.value;
 
-    // Host-only fee model
+        let airbnbGuestFeeRate = 0;
+        let airbnbHostFeeRate = 0;
 
-    airbnbGuestFeeRate = 0;
-    airbnbHostFeeRate = 0.155;
+        if(feeType === 'single'){
 
-}
-else{
+            airbnbGuestFeeRate = 0;
+            airbnbHostFeeRate = 0.155;
 
-    // Split fee model
+        }else{
 
-    airbnbGuestFeeRate = 0.145;
-    airbnbHostFeeRate = 0.03;
-}
+            airbnbGuestFeeRate = 0.145;
+            airbnbHostFeeRate = 0.03;
+        }
 
-const airbnbGuestFee =
-    totalBase * airbnbGuestFeeRate;
+        const airbnbGuestFee =
+            totalBase * airbnbGuestFeeRate;
 
-const airbnbGuestTotal =
-    totalBase + gst + airbnbGuestFee;
+        const airbnbGuestTotal =
+            totalBase + gst + airbnbGuestFee;
 
-const airbnbCommission =
-    totalBase * airbnbHostFeeRate;
+        const airbnbCommission =
+            totalBase * airbnbHostFeeRate;
 
-const airbnbTDS =
-    totalBase * 0.01;
+        const airbnbTDS =
+            totalBase * 0.01;
 
-const airbnbHostPayout =
-    totalBase -
-    airbnbCommission -
-    airbnbTDS;
+        const airbnbHostPayout =
+            totalBase -
+            airbnbCommission -
+            airbnbTDS;
 
-document.getElementById('airbnb-guest').textContent =
-    formatCurrency(airbnbGuestTotal);
+        document.getElementById('airbnb-guest').textContent =
+            formatCurrency(airbnbGuestTotal);
 
-document.getElementById('airbnb-guest-base').textContent =
-    formatCurrency(totalBase);
+        document.getElementById('airbnb-guest-base').textContent =
+            formatCurrency(totalBase);
 
-document.getElementById('airbnb-guest-gst').textContent =
-    formatCurrency(gst);
+        document.getElementById('airbnb-guest-gst').textContent =
+            formatCurrency(gst);
 
-document.getElementById('airbnb-guest-fee').textContent =
-    formatCurrency(airbnbGuestFee);
+        document.getElementById('airbnb-gst-percent').textContent =
+            gstPercent;
 
-document.getElementById('airbnb-guest-fee-percent').textContent =
-    (airbnbGuestFeeRate * 100).toFixed(1) + '%';
+        document.getElementById('airbnb-guest-fee').textContent =
+            formatCurrency(airbnbGuestFee);
 
-document.getElementById('airbnb-host').textContent =
-    formatCurrency(airbnbHostPayout);
+        document.getElementById('airbnb-guest-fee-percent').textContent =
+            (airbnbGuestFeeRate * 100).toFixed(1) + '%';
 
-document.getElementById('airbnb-commission').textContent =
-    formatCurrency(airbnbCommission);
+        document.getElementById('airbnb-host').textContent =
+            formatCurrency(airbnbHostPayout);
 
-document.getElementById('airbnb-commission-percent').textContent =
-    (airbnbHostFeeRate * 100).toFixed(1) + '%';
+        document.getElementById('airbnb-commission').textContent =
+            formatCurrency(airbnbCommission);
 
-document.getElementById('airbnb-tds').textContent =
-    formatCurrency(airbnbTDS);
+        document.getElementById('airbnb-commission-percent').textContent =
+            (airbnbHostFeeRate * 100).toFixed(1) + '%';
 
-		
+        document.getElementById('airbnb-tds').textContent =
+            formatCurrency(airbnbTDS);
+
+        document.getElementById('airbnb-tds-percent').textContent =
+            tdsPercent;
+
         // BOOKING
 
         const bookingCommission =
@@ -675,6 +687,9 @@ document.getElementById('airbnb-tds').textContent =
         document.getElementById('booking-guest-gst').textContent =
             formatCurrency(gst);
 
+        document.getElementById('booking-gst-percent').textContent =
+            gstPercent;
+
         document.getElementById('booking-host').textContent =
             formatCurrency(bookingHostPayout);
 
@@ -683,6 +698,9 @@ document.getElementById('airbnb-tds').textContent =
 
         document.getElementById('booking-tds').textContent =
             formatCurrency(bookingTDS);
+
+        document.getElementById('booking-tds-percent').textContent =
+            tdsPercent;
 
         // AGODA
 
@@ -706,6 +724,9 @@ document.getElementById('airbnb-tds').textContent =
         document.getElementById('agoda-guest-gst').textContent =
             formatCurrency(gst);
 
+        document.getElementById('agoda-gst-percent').textContent =
+            gstPercent;
+
         document.getElementById('agoda-host').textContent =
             formatCurrency(agodaHostPayout);
 
@@ -714,6 +735,9 @@ document.getElementById('airbnb-tds').textContent =
 
         document.getElementById('agoda-tds').textContent =
             formatCurrency(agodaTDS);
+
+        document.getElementById('agoda-tds-percent').textContent =
+            tdsPercent;
 
         // MMT
 
@@ -737,6 +761,9 @@ document.getElementById('airbnb-tds').textContent =
         document.getElementById('mmt-guest-gst').textContent =
             formatCurrency(gst);
 
+        document.getElementById('mmt-gst-percent').textContent =
+            gstPercent;
+
         document.getElementById('mmt-host').textContent =
             formatCurrency(mmtHostPayout);
 
@@ -745,6 +772,9 @@ document.getElementById('airbnb-tds').textContent =
 
         document.getElementById('mmt-tds').textContent =
             formatCurrency(mmtTDS);
+
+        document.getElementById('mmt-tds-percent').textContent =
+            tdsPercent;
     }
 
     baseRateInput.addEventListener('input', calculate);
