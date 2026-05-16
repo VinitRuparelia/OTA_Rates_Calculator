@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>OTA Commission Calculator</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+            background:#f5f5f5;
+            padding:16px;
+            line-height:1.6;
+        }
+
+        .container{
+            max-width:700px;
+            margin:0 auto;
+            background:#fff;
+            border-radius:18px;
+            padding:22px;
+            box-shadow:0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        h1{
+            font-size:24px;
+            font-weight:700;
+            color:#111;
+            margin-bottom:8px;
+        }
+
+        .subtitle{
+            font-size:14px;
+            color:#666;
+            margin-bottom:24px;
+        }
+
+        .input-group{
+            margin-bottom:18px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:8px;
+            font-size:14px;
+            font-weight:600;
+            color:#333;
+        }
+
+        input[type="number"]{
+            width:100%;
+            padding:13px;
+            border:1px solid #ddd;
+            border-radius:12px;
+            font-size:15px;
+        }
+
+        input[type="number"]:focus,
+        select:focus{
+            outline:none;
+            border-color:#007aff;
+        }
+
+        .platform-section{
+            border-top:1px solid #ececec;
+            margin-top:26px;
+            padding-top:24px;
+        }
+
+        .platform-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:16px;
+            gap:10px;
+        }
+
+        .platform-brand{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .platform-logo{
+            width:22px;
+            height:22px;
+            border-radius:6px;
+            object-fit:contain;
+        }
+
+        .platform-title{
+            font-size:17px;
+            font-weight:700;
+            color:#111;
+        }
+
+        .fee-select{
+            padding:9px 12px;
+            border-radius:10px;
+            border:1px solid #ddd;
+            background:#fff;
+            font-size:13px;
+            cursor:pointer;
+        }
+
+        .cards{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:14px;
+        }
+
+        @media (max-width:560px){
+
+            .cards{
+                grid-template-columns:1fr;
+            }
+
+            .platform-header{
+                flex-direction:column;
+                align-items:flex-start;
+            }
+        }
+
+        .card{
+            background:#fafafa;
+            border:1px solid #efefef;
+            border-radius:16px;
+            padding:18px;
+        }
+
+        .card-label{
+            font-size:12px;
+            color:#666;
+            margin-bottom:8px;
+            font-weight:600;
+            text-transform:uppercase;
+            letter-spacing:0.3px;
+        }
+
+        .card-amount{
+            font-size:28px;
+            font-weight:700;
+            color:#111;
+            margin-bottom:12px;
+        }
+
+        .card-details{
+            font-size:12px;
+            color:#666;
+            line-height:1.7;
+        }
+
+        .card-details div{
+            margin-bottom:4px;
+        }
+
+        .muted{
+            color:#999;
+        }
+
+        .info-box{
+            background:#eef6ff;
+            padding:14px;
+            border-radius:12px;
+            margin-top:26px;
+            font-size:12px;
+            color:#1457a8;
+            line-height:1.6;
+        }
+
+        .info-box strong{
+            display:block;
+            margin-bottom:6px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>OTA Commission Calculator</h1>
+
+    <p class="subtitle">
+        Compare what guests pay vs what you actually receive across platforms
+    </p>
+
+    <div class="input-group">
+
+        <label>Your nightly rate (₹)</label>
+
+        <input
+            type="number"
+            id="base-rate"
+            value="5000"
+            min="100"
+            step="100"
+        />
+
+    </div>
+
+    <div class="input-group">
+
+        <label>Number of nights</label>
+
+        <input
+            type="number"
+            id="nights"
+            value="1"
+            min="1"
+            max="30"
+        />
+
+    </div>
+
+    <!-- AIRBNB -->
+
+    <div class="platform-section">
+
+        <div class="platform-header">
+
+            <div class="platform-brand">
+
+                <img
+                    src="https://www.google.com/s2/favicons?domain=airbnb.com&sz=64"
+                    class="platform-logo"
+                />
+
+                <div class="platform-title">Airbnb</div>
+
+            </div>
+
+            <select id="airbnb-fee-type" class="fee-select">
+                <option value="split">Split Fee</option>
+                <option value="single">Single Fee</option>
+
+            </select>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <div class="card-label">Guest Pays</div>
+
+                <div class="card-amount" id="airbnb-guest">₹0</div>
+
+                <div class="card-details">
+
+                    <div>
+                        Nightly rate:
+                        <span id="airbnb-guest-base">₹0</span>
+                    </div>
+
+                    <div>
+                        GST:
+                        <span id="airbnb-guest-gst">₹0</span>
+                    </div>
+
+                    <div>
+                        Guest fee:
+                        <span id="airbnb-guest-fee">₹0</span>
+                        (<span id="airbnb-guest-fee-percent">15.5%</span>)
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-label">You Receive</div>
+
+                <div class="card-amount" id="airbnb-host">₹0</div>
+
+                <div class="card-details">
+
+                    <div>
+                        Commission:
+                        <span id="airbnb-commission">₹0</span>
+                        (<span id="airbnb-commission-percent">15.5%</span>)
+                    </div>
+
+                    <div>
+                        TDS:
+                        <span id="airbnb-tds">₹0</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- BOOKING -->
+
+    <div class="platform-section">
+
+        <div class="platform-header">
+
+            <div class="platform-brand">
+
+                <img
+                    src="https://www.google.com/s2/favicons?domain=booking.com&sz=64"
+                    class="platform-logo"
+                />
+
+                <div class="platform-title">Booking.com</div>
+
+            </div>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <div class="card-label">Guest Pays</div>
+
+                <div class="card-amount" id="booking-guest">₹0</div>
+
+                <div class="card-details">
+
+                    <div>
+                        Nightly rate:
+                        <span id="booking-guest-base">₹0</span>
+                    </div>
+
+                    <div>
+                        GST:
+                        <span id="booking-guest-gst">₹0</span>
+                    </div>
+
+                    <div class="muted">(No guest fee)</div>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-label">You Receive</div>
+
+                <div class="card-amount" id="booking-host">₹0</div>
+
+                <div class="card-details">
+
+                    <div>
+                        Commission:
+                        <span id="booking-commission">₹0</span>
+                        (15%)
+                    </div>
+
+                    <div>
+                        TDS:
+                        <span id="booking-tds">₹0</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- AGODA -->
+
+    <div class="platform-section">
+
+        <div class="platform-header">
+
+            <div class="platform-brand">
+
+                <img
+                    src="https://www.google.com/s2/favicons?domain=agoda.com&sz=64"
+                    class="platform-logo"
+                />
+
+                <div class="platform-title">Agoda</div>
+
+            </div>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <div class="card-label">Guest Pays</div>
+
+                <div class="card-amount" id="agoda-guest">₹0</div>
+
+                <div class="card-details">
+
+                    <div>
+                        Nightly rate:
+                        <span id="agoda-guest-base">₹0</span>
+                    </div>
+
+                    <div>
+                        GST:
+                        <span id="agoda-guest-gst">₹0</span>
+                    </div>
+
+                    <div class="muted">(No guest fee)</div>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-label">You Receive</div>
+
+                <div class="card-amount" id="agoda-host">₹0</div>
+
+                <div class="card-details">
+
+                    <div>
+                        Commission:
+                        <span id="agoda-commission">₹0</span>
+                        (15%)
+                    </div>
+
+                    <div>
+                        TDS:
+                        <span id="agoda-tds">₹0</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MAKEMYTRIP -->
+
+    <div class="platform-section">
+
+        <div class="platform-header">
+
+            <div class="platform-brand">
+
+                <img
+   		  src="https://www.google.com/s2/favicons?domain=in.goibibo.com&sz=64"
+  		  class="platform-logo"
+		/>
+
+                <div class="platform-title">
+                    Go-MMT (Connect)
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <div class="card-label">Guest Pays</div>
+
+                <div class="card-amount" id="mmt-guest">₹0</div>
+
+                <div class="card-details">
+
+                    <div>
+                        Nightly rate:
+                        <span id="mmt-guest-base">₹0</span>
+                    </div>
+
+                    <div>
+                        GST:
+                        <span id="mmt-guest-gst">₹0</span>
+                    </div>
+
+                    <div class="muted">(No guest fee)</div>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-label">You Receive</div>
+
+                <div class="card-amount" id="mmt-host">₹0</div>
+
+                <div class="card-details">
+
+                    <div>
+                        Commission:
+                        <span id="mmt-commission">₹0</span>
+                        (18%)
+                    </div>
+
+                    <div>
+                        TDS:
+                        <span id="mmt-tds">₹0</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="info-box">
+
+        <strong>Notes</strong>
+
+        GST used:
+        5% for ₹1,001–7,500,
+        12% for ₹7,501–10,000,
+        18% above ₹10,000.
+
+        <br><br>
+
+        TDS assumed at 1% with PAN.
+
+    </div>
+
+</div>
+
+<script>
+
+    const baseRateInput =
+        document.getElementById('base-rate');
+
+    const nightsInput =
+        document.getElementById('nights');
+
+    const airbnbFeeType =
+        document.getElementById('airbnb-fee-type');
+
+    function formatCurrency(amount){
+
+        return '₹' +
+            Math.round(amount).toLocaleString('en-IN');
+    }
+
+    function getGSTRate(rate){
+
+        if(rate <= 1000) return 0;
+
+        if(rate <= 7500) return 0.05;
+
+        if(rate <= 10000) return 0.12;
+
+        return 0.18;
+    }
+
+    function calculate(){
+
+        const baseRate =
+            parseFloat(baseRateInput.value) || 0;
+
+        const nights =
+            parseInt(nightsInput.value) || 1;
+
+        const totalBase =
+            baseRate * nights;
+
+        const gstRate =
+            getGSTRate(baseRate);
+
+        const gst =
+            totalBase * gstRate;
+
+        // AIRBNB
+
+        const feeType =
+            airbnbFeeType.value;
+
+        let airbnbGuestFeeRate = 0.155;
+        let airbnbHostFeeRate = 0.155;
+
+        if(feeType === 'split'){
+
+            airbnbGuestFeeRate = 0.145;
+            airbnbHostFeeRate = 0.03;
+        }
+
+        const airbnbGuestFee =
+            totalBase * airbnbGuestFeeRate;
+
+        const airbnbGuestTotal =
+            totalBase + gst + airbnbGuestFee;
+
+        const airbnbCommission =
+            totalBase * airbnbHostFeeRate;
+
+        const airbnbTDS =
+            totalBase * 0.01;
+
+        const airbnbHostPayout =
+            totalBase -
+            airbnbCommission -
+            airbnbTDS;
+
+        document.getElementById('airbnb-guest').textContent =
+            formatCurrency(airbnbGuestTotal);
+
+        document.getElementById('airbnb-guest-base').textContent =
+            formatCurrency(totalBase);
+
+        document.getElementById('airbnb-guest-gst').textContent =
+            formatCurrency(gst);
+
+        document.getElementById('airbnb-guest-fee').textContent =
+            formatCurrency(airbnbGuestFee);
+
+        document.getElementById('airbnb-guest-fee-percent').textContent =
+            (airbnbGuestFeeRate * 100).toFixed(1) + '%';
+
+        document.getElementById('airbnb-host').textContent =
+            formatCurrency(airbnbHostPayout);
+
+        document.getElementById('airbnb-commission').textContent =
+            formatCurrency(airbnbCommission);
+
+        document.getElementById('airbnb-commission-percent').textContent =
+            (airbnbHostFeeRate * 100).toFixed(1) + '%';
+
+        document.getElementById('airbnb-tds').textContent =
+            formatCurrency(airbnbTDS);
+
+        // BOOKING
+
+        const bookingCommission =
+            totalBase * 0.15;
+
+        const bookingTDS =
+            totalBase * 0.01;
+
+        const bookingHostPayout =
+            totalBase -
+            bookingCommission -
+            bookingTDS;
+
+        document.getElementById('booking-guest').textContent =
+            formatCurrency(totalBase + gst);
+
+        document.getElementById('booking-guest-base').textContent =
+            formatCurrency(totalBase);
+
+        document.getElementById('booking-guest-gst').textContent =
+            formatCurrency(gst);
+
+        document.getElementById('booking-host').textContent =
+            formatCurrency(bookingHostPayout);
+
+        document.getElementById('booking-commission').textContent =
+            formatCurrency(bookingCommission);
+
+        document.getElementById('booking-tds').textContent =
+            formatCurrency(bookingTDS);
+
+        // AGODA
+
+        const agodaCommission =
+            totalBase * 0.15;
+
+        const agodaTDS =
+            totalBase * 0.01;
+
+        const agodaHostPayout =
+            totalBase -
+            agodaCommission -
+            agodaTDS;
+
+        document.getElementById('agoda-guest').textContent =
+            formatCurrency(totalBase + gst);
+
+        document.getElementById('agoda-guest-base').textContent =
+            formatCurrency(totalBase);
+
+        document.getElementById('agoda-guest-gst').textContent =
+            formatCurrency(gst);
+
+        document.getElementById('agoda-host').textContent =
+            formatCurrency(agodaHostPayout);
+
+        document.getElementById('agoda-commission').textContent =
+            formatCurrency(agodaCommission);
+
+        document.getElementById('agoda-tds').textContent =
+            formatCurrency(agodaTDS);
+
+        // MMT
+
+        const mmtCommission =
+            totalBase * 0.18;
+
+        const mmtTDS =
+            totalBase * 0.01;
+
+        const mmtHostPayout =
+            totalBase -
+            mmtCommission -
+            mmtTDS;
+
+        document.getElementById('mmt-guest').textContent =
+            formatCurrency(totalBase + gst);
+
+        document.getElementById('mmt-guest-base').textContent =
+            formatCurrency(totalBase);
+
+        document.getElementById('mmt-guest-gst').textContent =
+            formatCurrency(gst);
+
+        document.getElementById('mmt-host').textContent =
+            formatCurrency(mmtHostPayout);
+
+        document.getElementById('mmt-commission').textContent =
+            formatCurrency(mmtCommission);
+
+        document.getElementById('mmt-tds').textContent =
+            formatCurrency(mmtTDS);
+    }
+
+    baseRateInput.addEventListener('input', calculate);
+
+    nightsInput.addEventListener('input', calculate);
+
+    airbnbFeeType.addEventListener('change', calculate);
+
+    calculate();
+
+</script>
+
+</body>
+</html>
