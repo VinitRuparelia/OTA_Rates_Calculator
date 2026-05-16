@@ -584,64 +584,75 @@
         const gst =
             totalBase * gstRate;
 
-        // AIRBNB
+     // AIRBNB
 
-        const feeType =
-            airbnbFeeType.value;
+const feeType =
+    airbnbFeeType.value;
 
-        let airbnbGuestFeeRate = 0.155;
-        let airbnbHostFeeRate = 0.155;
+let airbnbGuestFeeRate = 0;
+let airbnbHostFeeRate = 0;
 
-        if(feeType === 'split'){
+if(feeType === 'single'){
 
-            airbnbGuestFeeRate = 0.145;
-            airbnbHostFeeRate = 0.03;
-        }
+    // Host-only fee model
 
-        const airbnbGuestFee =
-            totalBase * airbnbGuestFeeRate;
+    airbnbGuestFeeRate = 0;
+    airbnbHostFeeRate = 0.155;
 
-        const airbnbGuestTotal =
-            totalBase + gst + airbnbGuestFee;
+}
+else{
 
-        const airbnbCommission =
-            totalBase * airbnbHostFeeRate;
+    // Split fee model
 
-        const airbnbTDS =
-            totalBase * 0.01;
+    airbnbGuestFeeRate = 0.145;
+    airbnbHostFeeRate = 0.03;
+}
 
-        const airbnbHostPayout =
-            totalBase -
-            airbnbCommission -
-            airbnbTDS;
+const airbnbGuestFee =
+    totalBase * airbnbGuestFeeRate;
 
-        document.getElementById('airbnb-guest').textContent =
-            formatCurrency(airbnbGuestTotal);
+const airbnbGuestTotal =
+    totalBase + gst + airbnbGuestFee;
 
-        document.getElementById('airbnb-guest-base').textContent =
-            formatCurrency(totalBase);
+const airbnbCommission =
+    totalBase * airbnbHostFeeRate;
 
-        document.getElementById('airbnb-guest-gst').textContent =
-            formatCurrency(gst);
+const airbnbTDS =
+    totalBase * 0.01;
 
-        document.getElementById('airbnb-guest-fee').textContent =
-            formatCurrency(airbnbGuestFee);
+const airbnbHostPayout =
+    totalBase -
+    airbnbCommission -
+    airbnbTDS;
 
-        document.getElementById('airbnb-guest-fee-percent').textContent =
-            (airbnbGuestFeeRate * 100).toFixed(1) + '%';
+document.getElementById('airbnb-guest').textContent =
+    formatCurrency(airbnbGuestTotal);
 
-        document.getElementById('airbnb-host').textContent =
-            formatCurrency(airbnbHostPayout);
+document.getElementById('airbnb-guest-base').textContent =
+    formatCurrency(totalBase);
 
-        document.getElementById('airbnb-commission').textContent =
-            formatCurrency(airbnbCommission);
+document.getElementById('airbnb-guest-gst').textContent =
+    formatCurrency(gst);
 
-        document.getElementById('airbnb-commission-percent').textContent =
-            (airbnbHostFeeRate * 100).toFixed(1) + '%';
+document.getElementById('airbnb-guest-fee').textContent =
+    formatCurrency(airbnbGuestFee);
 
-        document.getElementById('airbnb-tds').textContent =
-            formatCurrency(airbnbTDS);
+document.getElementById('airbnb-guest-fee-percent').textContent =
+    (airbnbGuestFeeRate * 100).toFixed(1) + '%';
 
+document.getElementById('airbnb-host').textContent =
+    formatCurrency(airbnbHostPayout);
+
+document.getElementById('airbnb-commission').textContent =
+    formatCurrency(airbnbCommission);
+
+document.getElementById('airbnb-commission-percent').textContent =
+    (airbnbHostFeeRate * 100).toFixed(1) + '%';
+
+document.getElementById('airbnb-tds').textContent =
+    formatCurrency(airbnbTDS);
+
+		
         // BOOKING
 
         const bookingCommission =
